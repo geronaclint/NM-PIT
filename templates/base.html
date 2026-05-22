@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Richardson Extrapolation Calculator{% endblock %}</title>
+    <meta name="description" content="{% block meta_desc %}An interactive numerical methods calculator for Richardson Extrapolation — built for engineering students.{% endblock %}">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- MathJax -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['\\[', '\\]']],
+            },
+            options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- html2pdf.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <!-- ── Navbar ──────────────────────────────────────────────── -->
+    <nav class="navbar" id="main-nav">
+        <div class="nav-container">
+            <a href="{{ url_for('home') }}" class="nav-brand">
+                <span class="brand-icon">∑</span>
+                <span class="brand-text">Richardson<span class="brand-highlight">Calc</span></span>
+            </a>
+            <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
+                <span></span><span></span><span></span>
+            </button>
+            <ul class="nav-links" id="nav-links">
+                <li><a href="{{ url_for('home') }}" class="{% if request.endpoint == 'home' %}active{% endif %}">Home</a></li>
+                <li><a href="{{ url_for('theory') }}" class="{% if request.endpoint == 'theory' %}active{% endif %}">Theory</a></li>
+                <li><a href="{{ url_for('examples') }}" class="{% if request.endpoint == 'examples' %}active{% endif %}">Examples</a></li>
+                <li><a href="{{ url_for('calculator') }}" class="{% if request.endpoint == 'calculator' %}active{% endif %}">Calculator</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ── Main Content ───────────────────────────────────────── -->
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- ── Footer ─────────────────────────────────────────────── -->
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; 2026 Richardson Extrapolation Calculator &mdash; Numerical Methods PIT Project</p>
+            <p class="footer-sub">Built with Flask &middot; MathJax &middot; Chart.js</p>
+        </div>
+    </footer>
+
+    <!-- Mobile nav toggle -->
+    <script>
+        document.getElementById('nav-toggle').addEventListener('click', function() {
+            document.getElementById('nav-links').classList.toggle('open');
+            this.classList.toggle('open');
+        });
+    </script>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

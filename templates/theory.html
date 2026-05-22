@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+{% block title %}Theory — Richardson Extrapolation{% endblock %}
+{% block meta_desc %}Mathematical theory of Richardson Extrapolation for numerical differentiation — finite differences, error analysis, and applications.{% endblock %}
+
+{% block content %}
+<section class="section page-header">
+    <div class="container">
+        <h1>Theory &amp; Discussion</h1>
+        <p class="page-subtitle">A comprehensive mathematical treatment of Richardson Extrapolation for numerical differentiation. Numeric values shown in the calculator and worked examples use <strong>4 decimal places</strong>.</p>
+    </div>
+</section>
+
+<!-- ── What is Richardson Extrapolation? ───────────────────── -->
+<section class="section">
+    <div class="container content-narrow">
+        <h2>1. What is Richardson Extrapolation?</h2>
+        <p>
+            <strong>Richardson Extrapolation</strong>, named after Lewis Fry Richardson (1911),
+            is a sequence acceleration technique used to improve the accuracy of numerical
+            approximations. In the context of numerical differentiation, it combines multiple
+            finite-difference estimates — each computed with a different step size — to
+            systematically eliminate leading-order error terms.
+        </p>
+        <p>
+            The key insight is that if an approximation \( D(h) \) has a known error structure
+            (e.g., error proportional to \( h^2 \)), then by combining \( D(h) \) and
+            \( D(h/2) \) in the right way, the \( h^2 \) error cancels, yielding an
+            approximation with \( O(h^4) \) error.
+        </p>
+
+        <h2>2. Purpose of the Method</h2>
+        <p>
+            The primary goal is to obtain a <em>high-accuracy derivative approximation</em>
+            without requiring an excessively small step size (which would introduce
+            round-off error). Richardson Extrapolation achieves this by being <em>smart</em>
+            about how it uses existing function evaluations rather than simply shrinking \( h \).
+        </p>
+
+        <h2>3. Finite Difference Foundations</h2>
+        <p>The starting point is the <strong>central difference</strong> approximation.</p>
+
+        <div class="math-block">
+            <h4>First Derivative — Central Difference</h4>
+            \[
+                f'(x) \approx \frac{f(x+h) - f(x-h)}{2h}
+            \]
+            <p>This formula has a truncation error of \( O(h^2) \).</p>
+        </div>
+
+        <div class="math-block">
+            <h4>Second Derivative — Central Difference</h4>
+            \[
+                f''(x) \approx \frac{f(x+h) - 2f(x) + f(x-h)}{h^2}
+            \]
+            <p>This also carries \( O(h^2) \) truncation error.</p>
+        </div>
+
+        <p>Other difference formulas exist:</p>
+
+        <div class="math-block">
+            <h4>Forward Difference</h4>
+            \[
+                f'(x) \approx \frac{f(x+h) - f(x)}{h} \qquad \text{Error: } O(h)
+            \]
+        </div>
+
+        <div class="math-block">
+            <h4>Backward Difference</h4>
+            \[
+                f'(x) \approx \frac{f(x) - f(x-h)}{h} \qquad \text{Error: } O(h)
+            \]
+        </div>
+
+        <p>
+            Central differences are preferred because they are symmetric and achieve
+            \( O(h^2) \) accuracy rather than \( O(h) \).
+        </p>
+
+        <h2>4. The Richardson Extrapolation Formula</h2>
+        <p>
+            Consider a central-difference approximation \( D(h) \) whose Taylor-series
+            error expansion contains only even powers of \( h \):
+        </p>
+        \[
+            D(h) = f'(x) + a_2 h^2 + a_4 h^4 + a_6 h^6 + \cdots
+        \]
+        <p>Evaluating at half the step size:</p>
+        \[
+            D(h/2) = f'(x) + a_2 \frac{h^2}{4} + a_4 \frac{h^4}{16} + \cdots
+        \]
+        <p>
+            Multiplying \( D(h/2) \) by 4 and subtracting \( D(h) \) eliminates the
+            \( a_2 h^2 \) term:
+        </p>
+        \[
+            \frac{4\,D(h/2) - D(h)}{4 - 1} = f'(x) + O(h^4)
+        \]
+
+        <div class="math-block highlight">
+            <h4>General Richardson Formula</h4>
+            \[
+                D_j^{(i)} = \frac{4^j \, D_{j-1}^{(i)} - D_{j-1}^{(i-1)}}{4^j - 1}
+            \]
+            <p>
+                where \( i \) is the row index (corresponding to step size \( h/2^i \))
+                and \( j \) is the column index (extrapolation level).
+            </p>
+        </div>
+
+        <h2>5. Why Extrapolation Improves Accuracy</h2>
+        <p>
+            Each column of the Richardson table eliminates one more order of error:
+        </p>
+        <ul>
+            <li><strong>Column 0</strong> — base central difference: \( O(h^2) \) error</li>
+            <li><strong>Column 1</strong> — first extrapolation: \( O(h^4) \) error</li>
+            <li><strong>Column 2</strong> — second extrapolation: \( O(h^6) \) error</li>
+            <li><strong>Column 3</strong> — third extrapolation: \( O(h^8) \) error</li>
+        </ul>
+        <p>
+            With just 4 function-evaluation sets, we jump from \( O(h^2) \) to \( O(h^8) \)
+            accuracy — a massive improvement. This is far more efficient than simply using
+            a very small \( h \), which would suffer from floating-point round-off error.
+        </p>
+
+        <h2>6. The Richardson Table</h2>
+        <p>Results are organized in a triangular table:</p>
+        <div class="table-responsive">
+            <table class="theory-table">
+                <thead>
+                    <tr>
+                        <th>Step size</th>
+                        <th>\(O(h^2)\)</th>
+                        <th>\(O(h^4)\)</th>
+                        <th>\(O(h^6)\)</th>
+                        <th>\(O(h^8)\)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>\(h\)</td><td>\(D_0^{(0)}\)</td><td></td><td></td><td></td></tr>
+                    <tr><td>\(h/2\)</td><td>\(D_0^{(1)}\)</td><td>\(D_1^{(1)}\)</td><td></td><td></td></tr>
+                    <tr><td>\(h/4\)</td><td>\(D_0^{(2)}\)</td><td>\(D_1^{(2)}\)</td><td>\(D_2^{(2)}\)</td><td></td></tr>
+                    <tr><td>\(h/8\)</td><td>\(D_0^{(3)}\)</td><td>\(D_1^{(3)}\)</td><td>\(D_2^{(3)}\)</td><td>\(D_3^{(3)}\)</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h2>7. Advantages and Disadvantages</h2>
+
+        <div class="two-col">
+            <div class="pros-card">
+                <h4>✅ Advantages</h4>
+                <ul>
+                    <li>Dramatically improves accuracy without smaller step sizes</li>
+                    <li>Systematic and algorithmic — easy to implement</li>
+                    <li>Works with any base finite-difference formula</li>
+                    <li>Provides built-in error estimation (compare successive columns)</li>
+                    <li>Computationally efficient — reuses function evaluations</li>
+                </ul>
+            </div>
+            <div class="cons-card">
+                <h4>⚠️ Disadvantages</h4>
+                <ul>
+                    <li>Assumes a smooth function with a known error expansion</li>
+                    <li>Not effective for noisy or discontinuous data</li>
+                    <li>Requires the ability to evaluate \( f \) at arbitrary points</li>
+                    <li>Too many levels can amplify round-off error</li>
+                    <li>Assumes the error expansion is in even powers of \( h \)</li>
+                </ul>
+            </div>
+        </div>
+
+        <h2>8. Applications in Engineering &amp; Scientific Computing</h2>
+        <ul class="app-list">
+            <li><strong>Structural Engineering:</strong> Computing stress-strain gradients from measured displacement data.</li>
+            <li><strong>Fluid Dynamics:</strong> Estimating velocity and acceleration fields from pressure measurements.</li>
+            <li><strong>Control Systems:</strong> Numerically differentiating sensor signals for PID controllers.</li>
+            <li><strong>Heat Transfer:</strong> Approximating temperature gradients in finite-difference simulations.</li>
+            <li><strong>Electrical Engineering:</strong> Computing rate-of-change of voltage/current waveforms.</li>
+            <li><strong>Machine Learning:</strong> Validating analytical gradients via numerical differentiation checks.</li>
+        </ul>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% block title %}Calculator — Richardson Extrapolation{% endblock %}
+{% block meta_desc %}Interactive Richardson Extrapolation calculator — enter any function and get step-by-step solutions, tables, and graphs.{% endblock %}
+
+{% block content %}
+<section class="section page-header">
+    <div class="container">
+        <h1>Interactive Calculator</h1>
+        <p class="page-subtitle">Enter a function, choose parameters, and see the full Richardson Extrapolation process.</p>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="calc-layout">
+
+            <!-- ── Input Panel ─────────────────────────────────── -->
+            <div class="calc-input-panel" id="input-panel">
+                <h2 class="panel-title">Input Parameters</h2>
+                <form id="calc-form" autocomplete="off">
+                    <div class="form-group">
+                        <label for="expression">Function f(x)</label>
+                        <input type="text" id="expression" name="expression"
+                               placeholder="e.g. sin(x), x^3 + 2x, exp(-x^2), 2^2x"
+                               required>
+                        <small class="form-hint">
+                            Supported: sin, cos, tan, exp, log, sqrt, pi, e, ^ or ** · Implicit multiplication: 2x, 3sin(x)
+                        </small>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="x-value">Point x</label>
+                            <input type="text" id="x-value" name="x"
+                                   placeholder="e.g. pi/4, 0.7854, sqrt(2)" required>
+                            <small class="form-hint">Accepts math: pi/4, pi/6, e, sqrt(2)</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="h-value">Step size h</label>
+                            <input type="text" id="h-value" name="h"
+                                   placeholder="e.g. 0.1, pi/100" required>
+                            <small class="form-hint">Accepts math: 0.1, pi/100, sqrt(2)/10</small>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="order">Derivative Order</label>
+                        <select id="order" name="order">
+                            <option value="1">First Derivative  f′(x)</option>
+                            <option value="2">Second Derivative  f″(x)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="method">Difference Method</label>
+                        <select id="method" name="method">
+                            <option value="central">Central Difference</option>
+                            <option value="forward" data-first-only="true">Forward Difference</option>
+                            <option value="backward" data-first-only="true">Backward Difference</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block" id="calc-btn">
+                        <span class="btn-text">Calculate</span>
+                        <span class="btn-loader" style="display:none;">Computing…</span>
+                    </button>
+                </form>
+
+                <!-- Error display -->
+                <div id="error-box" class="error-box" style="display:none;"></div>
+            </div>
+
+            <!-- ── Results Panel ───────────────────────────────── -->
+            <div class="calc-results-panel" id="results-panel" style="display:none;">
+
+                <!-- Summary -->
+                <div class="result-section" id="result-summary">
+                    <button type="button" class="btn btn-outline" id="export-pdf-btn" style="float: right; padding: 0.4rem 1rem; font-size: 0.8rem; border-color: var(--color-success); color: var(--color-success);">
+                        Export to PDF
+                    </button>
+                    <h2 class="panel-title">Result Summary</h2>
+                    <div class="summary-grid" id="summary-content"></div>
+                </div>
+
+                <!-- Richardson Table -->
+                <div class="result-section" id="result-table-section">
+                    <h2 class="panel-title">Richardson Extrapolation Table</h2>
+                    <div class="table-responsive" id="richardson-table-container"></div>
+                </div>
+
+                <!-- Graphs -->
+                <div class="result-section" id="result-graphs-section">
+                    <h2 class="panel-title">Function Graph</h2>
+                    <div class="graphs-grid" id="graphs-container">
+                        <div class="graph-wrap" id="graph-wrap">
+                            <canvas id="mainChart" height="400"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step-by-step -->
+                <div class="result-section" id="result-steps-section">
+                    <h2 class="panel-title">Step-by-Step Solution</h2>
+                    <div id="steps-container"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/calculator.js') }}"></script>
+{% endblock %}

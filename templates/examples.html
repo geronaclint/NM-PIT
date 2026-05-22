@@ -1,0 +1,288 @@
+{% extends "base.html" %}
+{% block title %}Worked Examples — Richardson Extrapolation{% endblock %}
+{% block meta_desc %}Two fully worked examples of Richardson Extrapolation — first and second derivative computations with complete step-by-step solutions.{% endblock %}
+
+{% block content %}
+<section class="section page-header">
+    <div class="container">
+        <h1>Worked Examples</h1>
+        <p class="page-subtitle">Two complete hand-solved problems demonstrating Richardson Extrapolation for first and second derivatives. All numeric values are shown to <strong>4 decimal places</strong>.</p>
+    </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     EXAMPLE 1 — First Derivative of sin(x)
+     ══════════════════════════════════════════════════════════════ -->
+<section class="section">
+    <div class="container content-narrow">
+        <div class="example-card">
+            <div class="example-header">
+                <span class="example-badge">Example 1</span>
+                <h2>First Derivative of \( f(x) = \sin(x) \)</h2>
+            </div>
+
+            <div class="example-body">
+                <!-- Given -->
+                <h3>Given</h3>
+                <ul>
+                    <li>Function: \( f(x) = \sin(x) \)</li>
+                    <li>Point: \( x = \dfrac{\pi}{4} \approx 0.7854 \)</li>
+                    <li>Step size: \( h = 0.1 \)</li>
+                    <li>Exact derivative: \( f'(x) = \cos(x) \), so \( f'(\pi/4) = \cos(\pi/4) = \dfrac{\sqrt{2}}{2} \approx 0.7071 \)</li>
+                </ul>
+
+                <!-- Formula -->
+                <h3>Formula</h3>
+                <p>Central difference for the first derivative:</p>
+                \[
+                    D_0^{(i)} = \frac{f(x + h_i) - f(x - h_i)}{2h_i}
+                \]
+                <p>Richardson combination:</p>
+                \[
+                    D_j^{(i)} = \frac{4^j \cdot D_{j-1}^{(i)} - D_{j-1}^{(i-1)}}{4^j - 1}
+                \]
+
+                <!-- Step 1: Column 0 -->
+                <h3>Step 1 — Central Differences (Column 0)</h3>
+
+                <h4>Row 0: \( h_0 = 0.1 \)</h4>
+                \[
+                    D_0^{(0)} = \frac{\sin(0.8854) - \sin(0.6854)}{2(0.1)}
+                    = \frac{0.7742 - 0.6330}{0.2}
+                    = \frac{0.1412}{0.2}
+                    = 0.7059
+                \]
+
+                <h4>Row 1: \( h_1 = 0.05 \)</h4>
+                \[
+                    D_0^{(1)} = \frac{\sin(0.8354) - \sin(0.7354)}{2(0.05)}
+                    = \frac{0.7416 - 0.6709}{0.1}
+                    = \frac{0.0707}{0.1}
+                    = 0.7068
+                \]
+
+                <h4>Row 2: \( h_2 = 0.025 \)</h4>
+                \[
+                    D_0^{(2)} = \frac{\sin(0.8104) - \sin(0.7604)}{2(0.025)}
+                    = \frac{0.7246 - 0.6892}{0.05}
+                    = \frac{0.0354}{0.05}
+                    = 0.7070
+                \]
+
+                <h4>Row 3: \( h_3 = 0.0125 \)</h4>
+                \[
+                    D_0^{(3)} = \frac{\sin(0.7979) - \sin(0.7729)}{2(0.0125)}
+                    = \frac{0.7159 - 0.6982}{0.025}
+                    = \frac{0.0177}{0.025}
+                    = 0.7071
+                \]
+
+                <!-- Step 2: Column 1 -->
+                <h3>Step 2 — First Richardson Extrapolation (Column 1)</h3>
+                <p>Using \( D_1^{(i)} = \dfrac{4 \cdot D_0^{(i)} - D_0^{(i-1)}}{3} \):</p>
+
+                \[
+                    D_1^{(1)} = \frac{4(0.7068) - 0.7059}{3} = \frac{2.8272 - 0.7059}{3} = \frac{2.1213}{3} = 0.7071
+                \]
+
+                \[
+                    D_1^{(2)} = \frac{4(0.7070) - 0.7068}{3} = \frac{2.8280 - 0.7068}{3} = \frac{2.1212}{3} = 0.7071
+                \]
+
+                \[
+                    D_1^{(3)} = \frac{4(0.7071) - 0.7070}{3} = \frac{2.8284 - 0.7070}{3} = \frac{2.1214}{3} = 0.7071
+                \]
+
+                <!-- Step 3: Column 2 -->
+                <h3>Step 3 — Second Extrapolation (Column 2)</h3>
+                <p>Using \( D_2^{(i)} = \dfrac{16 \cdot D_1^{(i)} - D_1^{(i-1)}}{15} \):</p>
+
+                \[
+                    D_2^{(2)} = \frac{16(0.7071) - 0.7071}{15} = \frac{11.3136 - 0.7071}{15} = 0.7071
+                \]
+
+                \[
+                    D_2^{(3)} = \frac{16(0.7071) - 0.7071}{15} = \frac{11.3136 - 0.7071}{15} = 0.7071
+                \]
+
+                <!-- Step 4: Column 3 -->
+                <h3>Step 4 — Third Extrapolation (Column 3)</h3>
+
+                \[
+                    D_3^{(3)} = \frac{64(0.7071) - 0.7071}{63} = \frac{45.2544 - 0.7071}{63} = 0.7071
+                \]
+
+                <!-- Richardson Table -->
+                <h3>Richardson Extrapolation Table</h3>
+                <div class="table-responsive">
+                    <table class="richardson-table">
+                        <thead>
+                            <tr>
+                                <th>\(h\)</th>
+                                <th>\(O(h^2)\)</th>
+                                <th>\(O(h^4)\)</th>
+                                <th>\(O(h^6)\)</th>
+                                <th>\(O(h^8)\)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>0.1000</td><td>0.7059</td><td></td><td></td><td></td></tr>
+                            <tr><td>0.0500</td><td>0.7068</td><td>0.7071</td><td></td><td></td></tr>
+                            <tr><td>0.0250</td><td>0.7070</td><td>0.7071</td><td>0.7071</td><td></td></tr>
+                            <tr><td>0.0125</td><td>0.7071</td><td>0.7071</td><td>0.7071</td><td>0.7071</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Final Answer -->
+                <div class="answer-box">
+                    <h3>Final Answer</h3>
+                    <p><strong>Best approximation:</strong> \( f'(\pi/4) \approx 0.7071 \)</p>
+                    <p><strong>Exact value:</strong> \( \cos(\pi/4) \approx 0.7071 \)</p>
+                    <p><strong>Absolute error:</strong> \( \approx 0.0000 \) (at 4-decimal display precision)</p>
+                    <p>
+                        The Richardson Extrapolation improved the accuracy from about
+                        3 correct digits (Column 0) to about 7 correct digits (Column 3).
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     EXAMPLE 2 — Second Derivative of exp(x)
+     ══════════════════════════════════════════════════════════════ -->
+<section class="section section-alt">
+    <div class="container content-narrow">
+        <div class="example-card">
+            <div class="example-header">
+                <span class="example-badge">Example 2</span>
+                <h2>Second Derivative of \( f(x) = e^x \)</h2>
+            </div>
+
+            <div class="example-body">
+                <!-- Given -->
+                <h3>Given</h3>
+                <ul>
+                    <li>Function: \( f(x) = e^x \)</li>
+                    <li>Point: \( x = 1 \)</li>
+                    <li>Step size: \( h = 0.1 \)</li>
+                    <li>Exact value: \( f''(x) = e^x \), so \( f''(1) = e \approx 2.7183 \)</li>
+                </ul>
+
+                <!-- Formula -->
+                <h3>Formula</h3>
+                <p>Central difference for the second derivative:</p>
+                \[
+                    D_0^{(i)} = \frac{f(x+h_i) - 2f(x) + f(x-h_i)}{h_i^2}
+                \]
+
+                <!-- Step 1: Column 0 -->
+                <h3>Step 1 — Central Differences (Column 0)</h3>
+
+                <h4>Row 0: \( h_0 = 0.1 \)</h4>
+                \[
+                    D_0^{(0)} = \frac{e^{1.1} - 2e^{1} + e^{0.9}}{0.0100}
+                    = \frac{3.0042 - 5.4366 + 2.4596}{0.0100}
+                    = \frac{0.0272}{0.0100}
+                    = 2.7205
+                \]
+
+                <h4>Row 1: \( h_1 = 0.05 \)</h4>
+                \[
+                    D_0^{(1)} = \frac{e^{1.05} - 2e^{1} + e^{0.95}}{0.0025}
+                    = \frac{2.8577 - 5.4366 + 2.5857}{0.0025}
+                    = \frac{0.0068}{0.0025}
+                    = 2.7188
+                \]
+
+                <h4>Row 2: \( h_2 = 0.025 \)</h4>
+                \[
+                    D_0^{(2)} = \frac{e^{1.025} - 2e^{1} + e^{0.975}}{0.0006}
+                    = \frac{2.7871 - 5.4366 + 2.6512}{0.0006}
+                    = \frac{0.0017}{0.0006}
+                    = 2.7184
+                \]
+
+                <h4>Row 3: \( h_3 = 0.0125 \)</h4>
+                \[
+                    D_0^{(3)} = \frac{e^{1.0125} - 2e^{1} + e^{0.9875}}{0.0002}
+                    = \frac{2.7525 - 5.4366 + 2.6845}{0.0002}
+                    = \frac{0.0004}{0.0002}
+                    = 2.7183
+                \]
+
+                <!-- Step 2: Column 1 -->
+                <h3>Step 2 — First Richardson Extrapolation (Column 1)</h3>
+
+                \[
+                    D_1^{(1)} = \frac{4(2.7188) - 2.7205}{3} = \frac{10.8752 - 2.7205}{3} = 2.7183
+                \]
+
+                \[
+                    D_1^{(2)} = \frac{4(2.7184) - 2.7188}{3} = \frac{10.8736 - 2.7188}{3} = 2.7183
+                \]
+
+                \[
+                    D_1^{(3)} = \frac{4(2.7183) - 2.7184}{3} = \frac{10.8732 - 2.7184}{3} = 2.7183
+                \]
+
+                <!-- Step 3: Column 2 -->
+                <h3>Step 3 — Second Extrapolation (Column 2)</h3>
+
+                \[
+                    D_2^{(2)} = \frac{16(2.7183) - 2.7183}{15} = 2.7183
+                \]
+
+                \[
+                    D_2^{(3)} = \frac{16(2.7183) - 2.7183}{15} = 2.7183
+                \]
+
+                <!-- Step 4: Column 3 -->
+                <h3>Step 4 — Third Extrapolation (Column 3)</h3>
+
+                \[
+                    D_3^{(3)} = \frac{64(2.7183) - 2.7183}{63} = 2.7183
+                \]
+
+                <!-- Richardson Table -->
+                <h3>Richardson Extrapolation Table</h3>
+                <div class="table-responsive">
+                    <table class="richardson-table">
+                        <thead>
+                            <tr>
+                                <th>\(h\)</th>
+                                <th>\(O(h^2)\)</th>
+                                <th>\(O(h^4)\)</th>
+                                <th>\(O(h^6)\)</th>
+                                <th>\(O(h^8)\)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>0.1000</td><td>2.7205</td><td></td><td></td><td></td></tr>
+                            <tr><td>0.0500</td><td>2.7188</td><td>2.7183</td><td></td><td></td></tr>
+                            <tr><td>0.0250</td><td>2.7184</td><td>2.7183</td><td>2.7183</td><td></td></tr>
+                            <tr><td>0.0125</td><td>2.7183</td><td>2.7183</td><td>2.7183</td><td>2.7183</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Final Answer -->
+                <div class="answer-box">
+                    <h3>Final Answer</h3>
+                    <p><strong>Best approximation:</strong> \( f''(1) \approx 2.7183 \)</p>
+                    <p><strong>Exact value:</strong> \( e \approx 2.7183 \)</p>
+                    <p><strong>Absolute error:</strong> \( \approx 0.0000 \) (at 4-decimal display precision)</p>
+                    <p>
+                        The exponential function is particularly well-behaved; Richardson
+                        Extrapolation converges rapidly. Already at Column 1 we have 6 correct
+                        digits.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

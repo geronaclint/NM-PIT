@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}Home — Richardson Extrapolation Calculator{% endblock %}
+
+{% block content %}
+<!-- ── Hero Section ────────────────────────────────────────────── -->
+<section class="hero">
+    <div class="container">
+        <div class="hero-badge">Numerical Methods</div>
+        <h1>Richardson Extrapolation<br><span class="hero-accent">Online Calculator</span></h1>
+        <p class="hero-subtitle">
+            An interactive educational tool for computing numerical derivatives
+            with improved accuracy using Richardson Extrapolation.
+        </p>
+        <div class="hero-actions">
+            <a href="{{ url_for('calculator') }}" class="btn btn-primary">Open Calculator</a>
+            <a href="{{ url_for('theory') }}" class="btn btn-outline">Learn the Theory</a>
+        </div>
+    </div>
+</section>
+
+<!-- ── Introduction ────────────────────────────────────────────── -->
+<section class="section">
+    <div class="container">
+        <h2 class="section-title">Numerical Differentiation</h2>
+        <div class="intro-grid">
+            <div class="intro-text">
+                <p>
+                    In many engineering and scientific applications, we need to compute derivatives
+                    of functions — but the function may only be known at discrete points, or the
+                    analytical derivative may be too complex to obtain.
+                </p>
+                <p>
+                    <strong>Numerical differentiation</strong> approximates derivatives using finite
+                    differences: small perturbations in the function's input. While straightforward,
+                    these approximations carry truncation error that depends on the step size \(h\).
+                </p>
+                <p>
+                    <strong>Richardson Extrapolation</strong> is a powerful technique that combines
+                    multiple finite-difference estimates at different step sizes to systematically
+                    cancel error terms. The result is a dramatically more accurate derivative
+                    approximation — often achieving near-machine-precision accuracy.
+                </p>
+            </div>
+            <div class="formula-card">
+                <div class="formula-label">Central Difference</div>
+                <div class="formula-math">
+                    \[f'(x) \approx \frac{f(x+h) - f(x-h)}{2h}\]
+                </div>
+                <div class="formula-label" style="margin-top:1.2rem;">Richardson Combination</div>
+                <div class="formula-math">
+                    \[D_j = \frac{4^j \, D_{j-1}(h/2) - D_{j-1}(h)}{4^j - 1}\]
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ── Feature Cards ───────────────────────────────────────────── -->
+<section class="section section-alt">
+    <div class="container">
+        <h2 class="section-title">Explore</h2>
+        <div class="card-grid">
+            <a href="{{ url_for('theory') }}" class="feature-card" id="card-theory">
+                <div class="card-icon">📐</div>
+                <h3>Theory &amp; Discussion</h3>
+                <p>Learn the mathematical foundations of Richardson Extrapolation with LaTeX-rendered formulas and conceptual explanations.</p>
+            </a>
+            <a href="{{ url_for('examples') }}" class="feature-card" id="card-examples">
+                <div class="card-icon">📝</div>
+                <h3>Worked Examples</h3>
+                <p>Step through two complete hand-solved examples — one for the first derivative and one for the second derivative.</p>
+            </a>
+            <a href="{{ url_for('calculator') }}" class="feature-card" id="card-calculator">
+                <div class="card-icon">🖩</div>
+                <h3>Interactive Calculator</h3>
+                <p>Enter any function and get the Richardson Extrapolation table, step-by-step solution, and graphs instantly.</p>
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}
