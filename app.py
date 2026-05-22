@@ -16,7 +16,9 @@ import numpy as np
 from utils.parser import parse_expression, make_callable, evaluate_exact, parse_numeric_expression
 from utils.richardson import richardson_extrapolation
 
-app = Flask(__name__)
+# Static assets: use public/static/ so Vercel serves CSS/JS from public/ (CDN).
+# Locally, Flask serves the same files from that folder.
+app = Flask(__name__, static_folder='public/static', static_url_path='/static')
 
 
 # ── Page Routes ──────────────────────────────────────────────────────

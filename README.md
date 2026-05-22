@@ -33,9 +33,10 @@ NM CALC/
 │   ├── theory.html         # Mathematical discussion
 │   ├── examples.html       # Two worked examples
 │   └── calculator.html     # Interactive calculator
-├── static/
-│   ├── css/style.css       # All styles
-│   └── js/calculator.js    # Calculator UI logic
+├── public/static/          # CSS & JS (served by Vercel CDN + Flask locally)
+│   ├── css/style.css
+│   └── js/calculator.js
+├── static/                 # Legacy copy — keep in sync with public/static/ when editing
 ├── requirements.txt
 ├── vercel.json
 └── README.md
@@ -89,6 +90,8 @@ Open **http://127.0.0.1:5000** in your browser.
 
 3. Follow the prompts. The `vercel.json` is pre-configured.
 
+> **Important:** Edit styles/scripts in `public/static/` (or update both `public/static/` and `static/` if you still use the old folder). Vercel only serves files under `public/`, not Flask's default `static/` folder at the project root.
+
 > **Note:** Matplotlib requires system-level libraries. On Vercel's serverless environment, plot generation may need the `Agg` backend (already configured) and may have cold-start latency.
 
 ---
@@ -105,8 +108,8 @@ Open **http://127.0.0.1:5000** in your browser.
 ### Frontend
 
 - **`templates/`** — Jinja2 templates extending `base.html`. MathJax renders all LaTeX. The calculator page uses AJAX (Fetch API) for a smooth single-page experience.
-- **`static/css/style.css`** — Custom CSS with CSS variables, responsive grid layout, and a professional engineering-style palette.
-- **`static/js/calculator.js`** — Client-side validation, API calls, dynamic DOM rendering for results, table, steps, and graphs.
+- **`public/static/css/style.css`** — Custom CSS with CSS variables, responsive grid layout, and a professional engineering-style palette.
+- **`public/static/js/calculator.js`** — Client-side validation, API calls, dynamic DOM rendering for results, table, steps, and graphs.
 
 ### Safe Input Handling
 
