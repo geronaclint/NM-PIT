@@ -10,15 +10,24 @@ Routes:
   POST /api/plot      → JSON API — generate graphs
 """
 
-from flask import Flask, render_template, request, jsonify
+import os
+
+from flask import Flask, render_template, request, jsonify, send_from_directory
 import numpy as np
 
 from utils.parser import parse_expression, make_callable, evaluate_exact, parse_numeric_expression
 from utils.richardson import richardson_extrapolation
 
-# Static assets: use public/static/ so Vercel serves CSS/JS from public/ (CDN).
-# Locally, Flask serves the same files from that folder.
-app = Flask(__name__, static_folder='public/static', static_url_path='/static')
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+STATIC_DIR = os.path.join(BASE_DIR, 'public', 'static')
+
+app = Flask(__name__)
+
+
+@app.route('/static/<path:filename>')
+def serve_static(filename):
+    """Serve CSS/JS on Vercel when requests hit Flask (fallback if CDN route misses)."""
+    return send_from_directory(STATIC_DIR, filename)
 
 
 # ── Page Routes ──────────────────────────────────────────────────────
